@@ -25,6 +25,7 @@ model Aluno {
   endereco      Endereco?
   projetos      Projeto[]
   matriculas    Matricula[]
+  avaliacoes    Avaliacao[] // Relacionamento 1-N com Avaliacao
 
   alunos Fa[] @relation("alunos")
   fas    Fa[] @relation("fas")
@@ -109,4 +110,17 @@ model Fa {
 
   @@id([alunoOriginalId, alunoFaId])
   @@map("fas")
+}
+
+model Avaliacao {
+  id        String   @id @default(uuid()) @db.Uuid
+  titulo    String   @db.VarChar(100)
+  nota      Float    @db.Real
+  descricao String?  @db.Text
+  data      DateTime @db.Date
+  alunoId   String   @map("aluno_id") @db.Uuid
+
+  aluno Aluno @relation(fields: [alunoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("avaliacoes")
 }
